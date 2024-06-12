@@ -10,9 +10,13 @@ def authenticate_user_db(username, password):
         cursor = conn.cursor()
         
         # Execute a consulta para verificar as credenciais
-        cursor.execute("SELECT COUNT(*) FROM USERS WHERE username=:username AND password=:password", 
+        cursor.execute("SELECT COUNT(*) FROM users WHERE username=:username AND password=:password", 
                        username=username, password=password)
         result = cursor.fetchone()
+
+        # Mensagem de depuração para verificar a consulta SQL
+        st.write(f"Consulta SQL executada: SELECT COUNT(*) FROM users WHERE username='{username}' AND password='{password}'")
+        st.write(f"Resultado da consulta: {result}")
         
         # Feche a conexão com o banco de dados
         cursor.close()
