@@ -1,19 +1,16 @@
 import streamlit as st
-import ldap3
 import oracledb
-from ldap3.core.exceptions import LDAPBindError
-
 
 # Função para verificar usuário no banco de dados Oracle
 def authenticate_user_db(username, password):
     try:
         # Conecte-se ao banco de dados Oracle
-        dsn = oracledb.makedsn('db_host', 1521, service_name='db_service')
+        dsn = oracledb.makedsn('oracle.fiap.com.br', 1521, service_name='orcl')
         conn = oracledb.connect(user='rm550167', password='051095', dsn=dsn)
         cursor = conn.cursor()
         
         # Execute a consulta para verificar as credenciais
-        cursor.execute("SELECT COUNT(*) FROM users WHERE username=:username AND password=:password", 
+        cursor.execute("SELECT COUNT(*) FROM USERS WHERE username=:username AND password=:password", 
                        username=username, password=password)
         result = cursor.fetchone()
         
@@ -39,7 +36,7 @@ def main():
     password = st.sidebar.text_input('Senha', type='password')
 
     if st.sidebar.button('Login'):
-        if authenticate_user_ldap(username, password) and authenticate_user_db(username, password):
+        if authenticate_user_db(username, password):
             st.success('Login bem-sucedido!')
             # Lógica para mostrar o dashboard após o login bem-sucedido
             show_dashboard()
